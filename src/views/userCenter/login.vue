@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import {menu} from "./menu"
 	export default {
 		data() {
 			return {
@@ -158,27 +159,38 @@
 				if(!validate){ return false }
 
 				this.islogin = true
-				var data = {
-					username: this.ruleForm.user,
-					password: this.$TOOL.crypto.MD5(this.ruleForm.password)
-				}
+				// var data = {
+				// 	account: this.ruleForm.user,
+				// 	// password: this.$TOOL.crypto.MD5(this.ruleForm.password)
+				// 	password: this.ruleForm.password
+				// }
+				var data = new FormData()
+				data.append('account',this.ruleForm.user)
+				data.append('password',this.ruleForm.password)
 				//获取token
 				var user = await this.$API.auth.token.post(data)
-				if(user.code == 200){
+				if(user.code == 0){
 					this.$TOOL.data.set("TOKEN", user.data.token)
-					this.$TOOL.data.set("USER_INFO", user.data.userInfo)
+					// this.$TOOL.data.set("USER_INFO", user.data.userInfo)
+					this.$TOOL.data.set("USER_INFO", user.data)
 				}else{
 					this.islogin = false
 					this.$message.warning(user.message)
 					return false
 				}
 				//获取菜单
-				var menu = null
+				// var menu = null
 				if(this.ruleForm.user == 'admin'){
-					menu = await this.$API.system.menu.myMenus.get()
+					// menu = await this.$API.system.menu.myMenus.get()
 				}else{
-					menu = await this.$API.demo.menu.get()
+					// menu = await this.$API.demo.menu.get()
 				}
+				// menu = 
+
+				
+
+				// import {menu} from "./menus"
+				
 				if(menu.code == 200){
 					if(menu.data.menu.length==0){
 						this.islogin = false
